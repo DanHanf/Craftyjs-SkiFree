@@ -9,8 +9,10 @@ window.onload = function () {
 		Crafty.sprite(38 , "images/sprite.png", {
 			skiLeft: [6.55, 10.8, .59, .75],
 			skiLeftDown: [6, 10.8, .55, .75],
+			skiDownLeft: [5.4, 10.7, .53, .86],
 			skiDown: [1.75, 0, .4, .85],
-			skiRightDown: [1.31, 0, .4, .85],
+			skiDownRight: [1.31, 0, .4, .85],
+			skiRightDown: [.65, 0, .6, .85],
 			skiRight: [0, 0, .6, .85]
 		});
 		//start the main scene when loaded
@@ -19,12 +21,14 @@ window.onload = function () {
 	
 	var playerSprites = ["skiLeft",
 			"skiLeftDown",
+			"skiDownLeft",
 			"skiDown",
+			"skiDownRight",
 			"skiRightDown",
 			"skiRight"];
 	
-	var currentSprite = 2;
-	var lastSprite = 2;
+	var currentSprite = 3;
+	var lastSprite = 3;
 	
 	Crafty.scene("main", function() 
 	{
@@ -40,7 +44,7 @@ window.onload = function () {
 				//on keydown, set the move booleans
 				if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
 					this.move.right = true;
-					if (currentSprite < 4) {
+					if (currentSprite < 6) {
 						currentSprite++;
 					}
 				} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
