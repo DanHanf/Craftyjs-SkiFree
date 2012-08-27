@@ -69,11 +69,37 @@ window.onload = function () {
 					lastSprite = currentSprite;
 				}
 				
-				if (currentSprite == 3) {
-					this.yspeed = 3;
+				if (currentSprite == 0) {
+					this.yspeed = 0;
+					this.xspeed = 0;
+				} 
+				else if (currentSprite == 1) {
+					this.yspeed = 4;
+					this.xspeed = -3;
+				}
+				else if (currentSprite == 2) {
+					this.yspeed = 5.5;
+					this.xspeed = -2;
+				}
+				else if (currentSprite == 3) {
+					this.yspeed = 6;
+					this.xspeed = 0;
+				}
+				else if (currentSprite == 4) {
+					this.yspeed = 5.5;
+					this.xspeed = 2;
+				}
+				else if (currentSprite == 5) {
+					this.yspeed = 4;
+					this.xspeed = 3;
+				}
+				else if (currentSprite == 6) {
+					this.yspeed = 0;
+					this.xspeed = 0;
 				}
 				else{
 					this.yspeed = 0;
+					this.xspeed = 0;
 				}
 				
 				
