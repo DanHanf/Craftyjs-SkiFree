@@ -14,7 +14,7 @@ window.onload = function () {
 			skiDownRight: [1.31, 0, .4, .85],
 			skiRightDown: [.65, 0, .6, .85],
 			skiRight: [0, 0, .6, .85],
-			tree: [.1, 12.6, .9, 1.6]
+			treeSprite: [.1, 12.6, .9, 1.6]
 		});
 		//start the main scene when loaded
 		Crafty.scene("main");
@@ -69,18 +69,34 @@ window.onload = function () {
 					lastSprite = currentSprite;
 				}
 				
+				if (currentSprite == 3) {
+					this.yspeed = 3;
+				}
+				else{
+					this.yspeed = 0;
+				}
+				
+				
+				//var oldxspeed = this.xspeed;
+				//this.xspeed = -this.yspeed;
+				//this.yspeed = oldxspeed;
+				this.x += this.xspeed;
+				this.y += this.yspeed;
+				
 			}); 
 			
 		//Tree component
-		Crafty.c("tree1", {   
+		Crafty.c("tree", {   
 			init: function() {
-				//this.origin("center");
-				
+				this.origin("center");
 				this.attr({
-					x: Crafty.math.randomInt(0, Crafty.viewport.width), //give it random positions, rotation and speed
-					y: Crafty.math.randomInt(0, Crafty.viewport.height),
+					x: Crafty.math.randomInt(0, Crafty.viewport.width), //give it random positions
+					y: Crafty.math.randomInt(0, 5000),
+					xspeed: 0, 
+					yspeed: 0,
 				}).bind("EnterFrame", function() {
-					
+					this.width = 20;
+					this.height = 20;
 				});
 			}});
 
@@ -91,10 +107,11 @@ window.onload = function () {
 			lastCount = trees;
 
 			for(var i = 0; i < trees; i++) {
-				Crafty.e("2D, DOM, tree, Collision, tree");
+				Crafty.e("2D, DOM, treeSprite, Collision, tree");
 			}
 		}
-		initTrees(5, 25)
+		initTrees(3, 50);
+		Crafty.viewport.follow(player, 0, 0);
 	});
 };
 
