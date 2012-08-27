@@ -1,6 +1,6 @@
 window.onload = function () {
     //start crafty
-    Crafty.init(800, 672);
+    Crafty.init(800, 700);
     //Crafty.canvas.init();
 	
 	//preload the needed assets
@@ -117,12 +117,11 @@ window.onload = function () {
 				this.origin("center");
 				this.attr({
 					x: Crafty.math.randomInt(0, Crafty.viewport.width), //give it random positions
-					y: Crafty.math.randomInt(0, 5000),
+					y: Crafty.math.randomInt(0, 10000),
 					xspeed: 0, 
 					yspeed: 0,
 				}).bind("EnterFrame", function() {
-					this.width = 20;
-					this.height = 20;
+
 				});
 			}});
 
@@ -136,7 +135,7 @@ window.onload = function () {
 				Crafty.e("2D, DOM, treeSprite, Collision, tree");
 			}
 		}
-		initTrees(3, 50);
+		initTrees(3, 500);
 		Crafty.viewport.follow(player, 0, 0);
 	});
 };
