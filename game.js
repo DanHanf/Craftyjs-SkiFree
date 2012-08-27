@@ -13,7 +13,8 @@ window.onload = function () {
 			skiDown: [1.75, 0, .4, .85],
 			skiDownRight: [1.31, 0, .4, .85],
 			skiRightDown: [.65, 0, .6, .85],
-			skiRight: [0, 0, .6, .85]
+			skiRight: [0, 0, .6, .85],
+			tree: [.1, 12.6, .9, 1.6]
 		});
 		//start the main scene when loaded
 		Crafty.scene("main");
@@ -30,10 +31,10 @@ window.onload = function () {
 	var currentSprite = 3;
 	var lastSprite = 3;
 	
-	Crafty.scene("main", function() 
-	{
+	Crafty.scene("main", function() {
 		//load the background
 		Crafty.background("url('images/bg.png')");
+		
 		
 		//player entity
 		var player = Crafty.e("2D, Canvas, skiDown, Controls, Collision")
@@ -67,8 +68,33 @@ window.onload = function () {
 					this.removeComponent(playerSprites[lastSprite]).addComponent(playerSprites[currentSprite]);
 					lastSprite = currentSprite;
 				}
+				
 			}); 
 			
+		//Tree component
+		Crafty.c("tree1", {   
+			init: function() {
+				//this.origin("center");
+				
+				this.attr({
+					x: Crafty.math.randomInt(0, Crafty.viewport.width), //give it random positions, rotation and speed
+					y: Crafty.math.randomInt(0, Crafty.viewport.height),
+				}).bind("EnterFrame", function() {
+					
+				});
+			}});
+
+			
+		function initTrees(lower, upper) {
+			var trees = Crafty.math.randomInt(lower, upper);
+			asteroidCount = trees;
+			lastCount = trees;
+
+			for(var i = 0; i < trees; i++) {
+				Crafty.e("2D, DOM, tree, Collision, tree");
+			}
+		}
+		initTrees(5, 25)
 	});
 };
 
