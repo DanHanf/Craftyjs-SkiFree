@@ -4,7 +4,7 @@ window.onload = function () {
     //Crafty.canvas.init();
 	
 	//preload the needed assets
-	Crafty.load(["images/sprite.png", "images/bg.png"], function() {
+	Crafty.load(["images/sprite.png", ""], function() {
 		//splice the spritemap
 		Crafty.sprite(38 , "images/sprite.png", {
 			skiLeft: [6.55, 10.8, .59, .75],
@@ -138,7 +138,7 @@ window.onload = function () {
 				this.origin("center");
 				this.attr({
 					x: Crafty.math.randomInt(0, Crafty.viewport.width), //give it random positions
-					y: Crafty.math.randomInt(0, 10000),
+					y: Crafty.math.randomInt(0, 50000),
 					xspeed: 0, 
 					yspeed: 0,
 				}).bind("EnterFrame", function() {
@@ -156,7 +156,7 @@ window.onload = function () {
 				Crafty.e("2D, DOM, treeSprite, Collision, tree");
 			}
 		}
-		initTrees(3, 500);
+		initTrees(3, 1500);
 		Crafty.viewport.follow(player, 0, 0);
 	});
 };
