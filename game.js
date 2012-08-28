@@ -87,8 +87,8 @@ window.onload = function () {
 						this.xspeed = 0;
 					} 
 					else if (currentSprite == 1) {
+						this.xspeed = -4;
 						this.yspeed = 4;
-						this.xspeed = -3;
 					}
 					else if (currentSprite == 2) {
 						this.yspeed = 5.5;
@@ -104,7 +104,7 @@ window.onload = function () {
 					}
 					else if (currentSprite == 5) {
 						this.yspeed = 4;
-						this.xspeed = 3;
+						this.xspeed = 4;
 					}
 					else if (currentSprite == 6) {
 						this.yspeed = 0;
@@ -135,6 +135,21 @@ window.onload = function () {
 						},1000);
 					},500);
 				}
+			})
+			.onHit("rock", function(e) {
+				if(!isRecovering){
+				this.removeComponent(playerSprites[lastSprite]).addComponent("skiCrash");
+				isCrashed = true;
+				setTimeout(function() {
+						isCrashed = false;
+						isRecovering = true;
+						setTimeout(function() {
+							isRecovering = false;
+							currentSprite = 3;
+							this.removeComponent("skiCrash").addComponent("skiDown");
+						},1000);
+					},500);
+				}
 			}); 
 
 		//Tree component
@@ -146,25 +161,19 @@ window.onload = function () {
 					y: Crafty.math.randomInt(0, 20000),
 					xspeed: 0, 
 					yspeed: 0,
-				}).bind("EnterFrame", function() {
-
 				});
 			}});
 
 		//creates a random number of trees (within a range) and places them in random positions	
 		function initTrees(lower, upper) {
 			var trees = Crafty.math.randomInt(lower, upper);
-			asteroidCount = trees;
+			treeCount = trees;
 			lastCount = trees;
 
 			for(var i = 0; i < trees; i++) {
 				Crafty.e("2D, DOM, treeSprite, Collision, tree");
 			}
 		}
-
-
-		
-		//makes the viewport lock onto the player sprite for scrolling
 
 		//Rock component
 		Crafty.c("rock", {   
@@ -175,24 +184,25 @@ window.onload = function () {
 					y: Crafty.math.randomInt(0, 20000),
 					xspeed: 0, 
 					yspeed: 0,
-				}).bind("EnterFrame", function() {
-
 				});
 			}});
 
 			
 		function initRocks(lower, upper) {
 			var rocks = Crafty.math.randomInt(lower, upper);
-			asteroidCount = rocks;
+			rockCount = rocks;
 			lastCount = rocks;
 
 			for(var i = 0; i < rocks; i++) {
-				Crafty.e("2D, DOM, rockSprite, Collision, tree");
+				Crafty.e("2D, DOM, rockSprite, Collision, rock");
 			}
 		}
+		
+		//load up obstacles
 		initTrees(50, 400);
 		initRocks(50, 400);
-//>>>>>>> e1c8aab35a8fc9936d8dd76ff9b0db930f42363c
+		
+		//makes the viewport lock onto the player sprite for scrolling
 		Crafty.viewport.follow(player, 0, 0);
 	
 	});
