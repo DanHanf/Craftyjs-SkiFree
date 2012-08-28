@@ -150,7 +150,7 @@ window.onload = function () {
 				});
 			}});
 
-			
+		//creates a random number of trees (within a range) and places them in random positions	
 		function initTrees(lower, upper) {
 			var trees = Crafty.math.randomInt(lower, upper);
 			asteroidCount = trees;
@@ -160,7 +160,9 @@ window.onload = function () {
 				Crafty.e("2D, DOM, treeSprite, Collision, tree");
 			}
 		}
-		initTrees(3, 1500);
+		initTrees(1000, 1500);
+		
+		//makes the viewport lock onto the player sprite for scrolling
 		Crafty.viewport.follow(player, 0, 0);
 	});
 };
