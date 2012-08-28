@@ -17,8 +17,10 @@ window.onload = function () {
 			skiRightDown: [.65, 0, .6, .85],
 			skiRight: [0, 0, .6, .85],
 			skiCrash: [6.54, 11.8, .59, .75],
+			skiJump: [2.2, 5.8, .9, .86],
 			treeSprite: [.1, 12.6, .9, 1.6],
-			rockSprite: [1.31, 13.4, 2, 2]
+			rockSprite: [1.31, 13.4, 2, 2],
+			jumpSprite: [3.5, 13.2, 2, .5]
 		});
 		//start the main scene when loaded
 		Crafty.scene("main");
@@ -38,6 +40,7 @@ window.onload = function () {
 	var lastSprite = 3;
 	var isCrashed = false;
 	var isRecovering = false;
+	var isJumping = false;
 	
 	Crafty.scene("main", function() {
 		//load the background
@@ -77,7 +80,7 @@ window.onload = function () {
 					this.xspeed = 0;
 				}
 				else {
-					if (currentSprite != lastSprite){
+					if (currentSprite != lastSprite && !isJumping){
 						this.removeComponent(playerSprites[lastSprite]).addComponent(playerSprites[currentSprite]);
 						lastSprite = currentSprite;
 					}
@@ -116,39 +119,65 @@ window.onload = function () {
 						this.xspeed = 0;
 					}
 					
+					if (isJumping) {
+						this.yspeed = 9;
+						this.xspeed = 0;
+					}
+					
 					this.x += this.xspeed;
 					this.y += this.yspeed;
 				}
 			})
 			.collision()
 			.onHit("tree", function(e) {
-				if(!isRecovering){
+				if(!isRecovering && !isJumping){
 				this.removeComponent(playerSprites[lastSprite]).addComponent("skiCrash");
 				isCrashed = true;
+				that = this;
 				setTimeout(function() {
 						isCrashed = false;
 						isRecovering = true;
 						setTimeout(function() {
 							isRecovering = false;
 							currentSprite = 3;
-							this.removeComponent("skiCrash").addComponent("skiDown");
+							that.removeComponent("skiCrash").addComponent("skiDown");
 						},1000);
 					},500);
 				}
 			})
+			.collision()
 			.onHit("rock", function(e) {
-				if(!isRecovering){
+				if(!isRecovering && !isJumping){
 				this.removeComponent(playerSprites[lastSprite]).addComponent("skiCrash");
 				isCrashed = true;
+				that = this;
 				setTimeout(function() {
 						isCrashed = false;
 						isRecovering = true;
 						setTimeout(function() {
 							isRecovering = false;
 							currentSprite = 3;
-							this.removeComponent("skiCrash").addComponent("skiDown");
+							that.removeComponent("skiCrash").addComponent("skiDown");
+							
 						},1000);
 					},500);
+				}
+			})
+			.collision()
+			.onHit("jump", function(e) {
+				if(!isRecovering && !isJumping){
+					isJumping = true;
+	
+					this.removeComponent(playerSprites[lastSprite]).addComponent("skiJump");
+					
+					var that = this;	
+				//	that.tween({y: that.y-250}, 2000);
+					
+					setTimeout(function() {
+						isJumping = false;
+						that.removeComponent("skiJump").addComponent("skiDown");
+						currentSprite = 3;
+					}, 1200);
 				}
 			}); 
 
@@ -198,13 +227,37 @@ window.onload = function () {
 			}
 		}
 		
+		//Jump component
+		Crafty.c("jump", {   
+			init: function() {
+				this.origin("center");
+				this.attr({
+					x: Crafty.math.randomInt(0, Crafty.viewport.width * 2), //give it random positions
+					y: Crafty.math.randomInt(0, 20000),
+					xspeed: 0, 
+					yspeed: 0,
+				});
+			}});
+
+			
+		function initJumps(lower, upper) {
+			var jumps = Crafty.math.randomInt(lower, upper);
+			jumpCount = jumps;
+
+			for(var i = 0; i < jumps; i++) {
+				Crafty.e("2D, DOM, jumpSprite, Collision, jump");
+			}
+		}
+		
 		//load up obstacles
 		initTrees(50, 400);
 		initRocks(50, 400);
 		
+		//load up jumps
+		initJumps(50, 150);		
+				
 		//makes the viewport lock onto the player sprite for scrolling
 		Crafty.viewport.follow(player, 0, 0);
-	
 	});
 
 };
