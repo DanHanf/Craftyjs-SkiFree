@@ -15,7 +15,8 @@ window.onload = function () {
 			skiRightDown: [.65, 0, .6, .85],
 			skiRight: [0, 0, .6, .85],
 			skiCrash: [6.54, 11.8, .59, .75],
-			treeSprite: [.1, 12.6, .9, 1.6]
+			treeSprite: [.1, 12.6, .9, 1.6],
+			rockSprite: [1.31, 13.4, 2, 2]
 		});
 		//start the main scene when loaded
 		Crafty.scene("main");
@@ -131,7 +132,7 @@ window.onload = function () {
 					},500);
 				}
 			}); 
-			
+
 		//Tree component
 		Crafty.c("tree", {   
 			init: function() {
@@ -156,8 +157,35 @@ window.onload = function () {
 				Crafty.e("2D, DOM, treeSprite, Collision, tree");
 			}
 		}
-		initTrees(3, 1500);
+		//Rock component
+		Crafty.c("rock", {   
+			init: function() {
+				this.origin("center");
+				this.attr({
+					x: Crafty.math.randomInt(0, Crafty.viewport.width), //give it random positions
+					y: Crafty.math.randomInt(0, 50000),
+					xspeed: 0, 
+					yspeed: 0,
+				}).bind("EnterFrame", function() {
+
+				});
+			}});
+
+			
+		function initRocks(lower, upper) {
+			var rocks = Crafty.math.randomInt(lower, upper);
+			asteroidCount = rocks;
+			lastCount = rocks;
+
+			for(var i = 0; i < rocks; i++) {
+				Crafty.e("2D, DOM, rockSprite, Collision, tree");
+			}
+		}
+		initTrees(10, 1500);
+		initRocks(1, 1000);
 		Crafty.viewport.follow(player, 0, 0);
+	
 	});
+
 };
 
