@@ -14,6 +14,7 @@ window.onload = function () {
 			skiDownRight: [1.31, 0, .4, .85],
 			skiRightDown: [.65, 0, .6, .85],
 			skiRight: [0, 0, .6, .85],
+			skiCrash: [6.54, 11.8, .59, .75],
 			treeSprite: [.1, 12.6, .9, 1.6]
 		});
 		//start the main scene when loaded
@@ -30,10 +31,12 @@ window.onload = function () {
 	
 	var currentSprite = 3;
 	var lastSprite = 3;
+	var isCrashed = false;
+	var isRecovering = false;
 	
 	Crafty.scene("main", function() {
 		//load the background
-		Crafty.background("url('images/bg.png')");
+	//	Crafty.background("url('images/bg.png')");
 		
 		
 		//player entity
@@ -63,52 +66,70 @@ window.onload = function () {
 					this.move.left = false;
 				}
 			})
-			.bind("EnterFrame", function() {			
-				if (currentSprite != lastSprite){
-					this.removeComponent(playerSprites[lastSprite]).addComponent(playerSprites[currentSprite]);
-					lastSprite = currentSprite;
-				}
-				
-				if (currentSprite == 0) {
-					this.yspeed = 0;
-					this.xspeed = 0;
-				} 
-				else if (currentSprite == 1) {
-					this.yspeed = 4;
-					this.xspeed = -3;
-				}
-				else if (currentSprite == 2) {
-					this.yspeed = 5.5;
-					this.xspeed = -2;
-				}
-				else if (currentSprite == 3) {
-					this.yspeed = 6;
-					this.xspeed = 0;
-				}
-				else if (currentSprite == 4) {
-					this.yspeed = 5.5;
-					this.xspeed = 2;
-				}
-				else if (currentSprite == 5) {
-					this.yspeed = 4;
-					this.xspeed = 3;
-				}
-				else if (currentSprite == 6) {
+			.bind("EnterFrame", function() {		
+				if(isCrashed){
 					this.yspeed = 0;
 					this.xspeed = 0;
 				}
-				else{
-					this.yspeed = 0;
-					this.xspeed = 0;
+				else {
+					if (currentSprite != lastSprite){
+						this.removeComponent(playerSprites[lastSprite]).addComponent(playerSprites[currentSprite]);
+						lastSprite = currentSprite;
+					}
+					
+					if (currentSprite == 0) {
+						this.yspeed = 0;
+						this.xspeed = 0;
+					} 
+					else if (currentSprite == 1) {
+						this.yspeed = 4;
+						this.xspeed = -3;
+					}
+					else if (currentSprite == 2) {
+						this.yspeed = 5.5;
+						this.xspeed = -2;
+					}
+					else if (currentSprite == 3) {
+						this.yspeed = 6;
+						this.xspeed = 0;
+					}
+					else if (currentSprite == 4) {
+						this.yspeed = 5.5;
+						this.xspeed = 2;
+					}
+					else if (currentSprite == 5) {
+						this.yspeed = 4;
+						this.xspeed = 3;
+					}
+					else if (currentSprite == 6) {
+						this.yspeed = 0;
+						this.xspeed = 0;
+					}
+					
+					if (isRecovering) {
+						this.yspeed = 2;
+						this.xspeed = 0;
+					}
+					
+					this.x += this.xspeed;
+					this.y += this.yspeed;
 				}
-				
-				
-				//var oldxspeed = this.xspeed;
-				//this.xspeed = -this.yspeed;
-				//this.yspeed = oldxspeed;
-				this.x += this.xspeed;
-				this.y += this.yspeed;
-				
+			})
+			.collision()
+			.onHit("tree", function(e) {
+				if(!isRecovering){
+				this.removeComponent(playerSprites[lastSprite]).addComponent("skiCrash");
+				isCrashed = true;
+				setTimeout(function() {
+						isCrashed = false;
+						isRecovering = true;
+						setTimeout(function() {
+							isRecovering = false;
+							currentSprite = 3;
+							this.removeComponent("skiCrash").addComponent("skiDown");
+						},1000);
+					},500);
+				}
 			}); 
 			
 		//Tree component
