@@ -1,6 +1,8 @@
 window.onload = function () {
     //start crafty
     Crafty.init(800, 700);
+	
+	//uncomment to use canvas element
     //Crafty.canvas.init();
 	
 	//preload the needed assets
@@ -21,6 +23,8 @@ window.onload = function () {
 		Crafty.scene("main");
 	});
 	
+	//this array is used to iterate through the player sprites when 
+	//the player hits the left or right arrow
 	var playerSprites = ["skiLeft",
 			"skiLeftDown",
 			"skiDownLeft",
@@ -137,7 +141,7 @@ window.onload = function () {
 			init: function() {
 				this.origin("center");
 				this.attr({
-					x: Crafty.math.randomInt(0, Crafty.viewport.width), //give it random positions
+					x: Crafty.math.randomInt(0, Crafty.viewport.width * 3), //give it random positions
 					y: Crafty.math.randomInt(0, 50000),
 					xspeed: 0, 
 					yspeed: 0,
