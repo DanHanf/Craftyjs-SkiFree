@@ -17,9 +17,10 @@ window.onload = function () {
 			skiRightDown: [.65, 0, .6, .85],
 			skiRight: [0, 0, .6, .85],
 			skiCrash: [6.54, 11.8, .59, .75],
+			skiOuch: [0, 10.7, .8, .8],
 			skiJump: [2.2, 5.8, .9, .86],
 			treeSprite: [.1, 12.6, .9, 1.6],
-			rockSprite: [1.31, 13.4, 2, 2],
+			rockSprite: [1.31, 13.4, 2, .7],
 			jumpSprite: [3.5, 13.2, 2, .5]
 		});
 		//start the main scene when loaded
@@ -115,7 +116,7 @@ window.onload = function () {
 					}
 					
 					if (isRecovering) {
-						this.yspeed = 2;
+						this.yspeed = 1;
 						this.xspeed = 0;
 					}
 					
@@ -131,16 +132,18 @@ window.onload = function () {
 			.collision()
 			.onHit("tree", function(e) {
 				if(!isRecovering && !isJumping){
-				this.removeComponent(playerSprites[lastSprite]).addComponent("skiCrash");
+				this.removeComponent(playerSprites[lastSprite]).addComponent("skiOuch");
 				isCrashed = true;
 				that = this;
 				setTimeout(function() {
 						isCrashed = false;
 						isRecovering = true;
+						that.removeComponent("skiOuch").addComponent("skiCrash");
 						setTimeout(function() {
+							isCrashed = false;
 							isRecovering = false;
 							currentSprite = 3;
-							that.removeComponent("skiCrash").addComponent("skiDown");
+							that.removeComponent("skiCrash").addComponent("skiDown");	
 						},1000);
 					},500);
 				}
@@ -148,17 +151,18 @@ window.onload = function () {
 			.collision()
 			.onHit("rock", function(e) {
 				if(!isRecovering && !isJumping){
-				this.removeComponent(playerSprites[lastSprite]).addComponent("skiCrash");
+				this.removeComponent(playerSprites[lastSprite]).addComponent("skiOuch");
 				isCrashed = true;
 				that = this;
 				setTimeout(function() {
 						isCrashed = false;
 						isRecovering = true;
+						that.removeComponent("skiOuch").addComponent("skiCrash");
 						setTimeout(function() {
+							isCrashed = false;
 							isRecovering = false;
 							currentSprite = 3;
-							that.removeComponent("skiCrash").addComponent("skiDown");
-							
+							that.removeComponent("skiCrash").addComponent("skiDown");	
 						},1000);
 					},500);
 				}
@@ -200,7 +204,7 @@ window.onload = function () {
 			lastCount = trees;
 
 			for(var i = 0; i < trees; i++) {
-				Crafty.e("2D, DOM, treeSprite, Collision, tree");
+				Crafty.e("2D, DOM, treeSprite, Collision, tree").collision([20,60], [25,60], [30,60]);
 			}
 		}
 
@@ -223,7 +227,7 @@ window.onload = function () {
 			lastCount = rocks;
 
 			for(var i = 0; i < rocks; i++) {
-				Crafty.e("2D, DOM, rockSprite, Collision, rock");
+				Crafty.e("2D, DOM, rockSprite, Collision, rock").collision([0,20], [10,30], [20,40], [30,50], [40,40], [50,30], [60,20] );
 			}
 		}
 		
